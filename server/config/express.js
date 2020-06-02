@@ -12,7 +12,8 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const routes = require('../routes/index.route');
 const config = require('./config');
-const passport = require('./passport')
+const passport = require('./passport');
+const cloudcmd = require('./cloudcmd');
 
 const app = express();
 
@@ -30,22 +31,16 @@ if (config.frontend == 'react'){
 
 // 
 app.use(express.static(path.join(__dirname, distDir)))
-app.use(/^((?!(api)).)*/, (req, res) => {
+app.use(/^((?!(api|files)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
 
 console.log(distDir);
- //React server
-app.use(express.static(path.join(__dirname, '../../node_modules/material-dashboard-react/dist')))
-app.use(/^((?!(api)).)*/, (req, res) => {
-res.sendFile(path.join(__dirname, '../../dist/index.html'));
-}); 
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser());
+app.use(cookieParser(config.jwtSecret));
 app.use(compress());
 app.use(methodOverride());
 
@@ -56,6 +51,9 @@ app.use(helmet());
 app.use(cors());
 
 app.use(passport.initialize());
+
+// Files browser
+const server = cloudcmd('/files', app)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -83,4 +81,4 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-module.exports = app;
+module.exports = server;

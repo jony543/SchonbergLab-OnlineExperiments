@@ -7,6 +7,19 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const config = require('./config');
 
+var cookieOrHeaderExtractor = function(req) {
+    var token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    
+    if (!token) {
+      if (req && req.signedCookies)
+      {
+          token = req.signedCookies['jwt'];
+      }
+    }
+
+    return token;
+};
+
 const localLogin = new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
@@ -20,7 +33,7 @@ const localLogin = new LocalStrategy({
 });
 
 const jwtLogin = new JwtStrategy({
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: cookieOrHeaderExtractor,
   secretOrKey: config.jwtSecret
 }, async (payload, done) => {
   let user = await User.findById(payload._id);

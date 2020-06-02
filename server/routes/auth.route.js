@@ -24,5 +24,13 @@ async function register(req, res, next) {
 function login(req, res) {
   let user = req.user;
   let token = authCtrl.generateToken(user);
+
+  res.cookie('jwt', token, {
+            httpOnly: true,
+            sameSite: true,
+            signed: true,
+            secure: false
+        });
+
   res.json({ user, token });
 }

@@ -26,6 +26,7 @@
     "@angular/router": "^9.1.4",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.2",
+    "cloudcmd": "^14.6.0",
     "compression": "^1.7.2",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
@@ -48,6 +49,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "rxjs": "^6.5.5",
+    "socket.io": "^2.3.0",
     "swagger-ui-express": "^3.0.9",
     "zone.js": "~0.10.3"
   },
