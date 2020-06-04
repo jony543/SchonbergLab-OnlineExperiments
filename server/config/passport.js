@@ -51,6 +51,8 @@ const jwtLogin = new JwtStrategy({
     user = user.toObject();
   
   delete user.hashedPassword;
+  delete user.passwordHash;
+
   done(null, user);
 });
 

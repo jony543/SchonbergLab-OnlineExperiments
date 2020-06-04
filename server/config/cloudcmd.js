@@ -3,6 +3,7 @@ const cloudcmd = require('cloudcmd');
 const io = require('socket.io');
 const express = require('express');
 const passport = require('passport');
+const url = require('url');
 
 const config = {
     name: 'cloudcmd :)',
@@ -44,7 +45,22 @@ module.exports = function (prefix, app) {
     });
 
     const router = express.Router();
-    router.use(passport.authenticate('jwt', { session: false }))
+    router.use(function(req, res, next) {
+        passport.authenticate('jwt', { session: false }, function(err, user, info) {
+            if (err) { return next(err); }
+            if (!user) {
+                return res.redirect('/auth/login?redirect=' + req.originalUrl);
+            }
+            
+            // no need to log in user - we are not keeping sessions
+            // req.logIn(user, function(err) {
+            //   if (err) { return next(err); }
+            //   return next();
+            // });
+
+            return next();
+        })(req, res, next);
+    });
     router.use(cloudcmd({
         socket: socket1,  // used by Config, Edit (optional) and Console (required)
         config,  // config data (optional)
