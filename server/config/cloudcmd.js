@@ -4,14 +4,15 @@ const io = require('socket.io');
 const express = require('express');
 const passport = require('passport');
 const url = require('url');
+const appConfig = require('./config');
 
 const config = {
-    name: 'cloudcmd :)',
-    root: 'C:\\Development\\schonberg',
+    name: 'Online Experiments Assets Manager',
+    root: appConfig.studyAssetsFolder,
     console: false,
     contact: false,
     configDialog: false,
-    editor: 'dword',
+    editor: 'edward',
 };
 
 const filePicker = {

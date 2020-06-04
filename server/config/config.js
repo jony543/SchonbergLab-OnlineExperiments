@@ -45,7 +45,8 @@ const config = {
     user: envVars.MYSQL_USER, 
     password: envVars.MYSQL_PASS,
     database: envVars.MYSQL_DB
-  }
+  },
+  studyAssetsFolder: envVars.STUDY_ASSETS_FOLDER
 };
 
 module.exports = config;
