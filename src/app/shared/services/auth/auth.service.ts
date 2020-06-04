@@ -83,6 +83,7 @@ export class AuthService {
     this.tokenStorage.signOut();
     this.setUser(null);
     delete window.user;
+    document.cookie = 'jwt' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 
   getAuthorizationHeaders() {

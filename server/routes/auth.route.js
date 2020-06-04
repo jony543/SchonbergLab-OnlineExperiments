@@ -16,17 +16,24 @@ router.get('/me', passport.authenticate('jwt', { session: false }), login);
 async function register(req, res, next) {
   let user = await userCtrl.insert(req.body);
   user = user.toObject();
+  
   delete user.hashedPassword;
+  delete user.passwordHash
+  
   req.user = user;
   next()
 }
 
 function login(req, res) {
   let user = req.user;
+
+  delete user.hashedPassword;
+  delete user.passwordHash
+  
   let token = authCtrl.generateToken(user);
 
   res.cookie('jwt', token, {
-            httpOnly: true,
+            httpOnly: false,
             sameSite: true,
             signed: true,
             secure: false
