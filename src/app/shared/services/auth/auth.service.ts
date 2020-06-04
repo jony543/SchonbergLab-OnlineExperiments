@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   setUser(user: User | null): void {
-    if (user) {
+    if (user && user.roles) {
       user.isAdmin = user.roles.includes('admin');
     }
 

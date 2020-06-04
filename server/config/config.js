@@ -39,6 +39,12 @@ const config = {
   mongo: {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT
+  },
+  mysql: {
+    url: envVars.MYSQL_URL,
+    user: envVars.MYSQL_USER, 
+    password: envVars.MYSQL_PASS,
+    database: envVars.MYSQL_DB
   }
 };
 
