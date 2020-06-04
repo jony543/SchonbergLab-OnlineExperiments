@@ -2,10 +2,11 @@
   <mat-toolbar color="primary">
     <a routerLink="/" class="logo"></a>
     <span class="example-spacer"></span>
+    <a href="/study_assets" style="flex: 10 1 auto;">Assets Management</a>
     <a class="links side" routerLink="/auth/login" *ngIf="!user">Login</a>
     <div>
       <a class="links side" *ngIf="user" [matMenuTriggerFor]="menu">
-        <mat-icon>account_circle</mat-icon>{{ user.fullname }}
+        <mat-icon>account_circle</mat-icon>{{ user.name || user.fullname }}
       </a>
       <mat-menu #menu="matMenu">
         <button mat-menu-item *ngIf="user?.isAdmin" routerLink="/admin">admin</button>

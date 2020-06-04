@@ -31,7 +31,7 @@ if (config.frontend == 'react'){
 
 // 
 app.use(express.static(path.join(__dirname, distDir)))
-app.use(/^((?!(api|files)).)*/, (req, res) => {
+app.use(/^((?!(api|study_assets)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
 
@@ -53,7 +53,7 @@ app.use(cors());
 app.use(passport.initialize());
 
 // Files browser
-const server = cloudcmd('/files', app)
+const server = cloudcmd('/study_assets', app)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
