@@ -25,7 +25,7 @@ const localLogin = new LocalStrategy({
   usernameField: 'email'
 }, async (email, password, done) => {
   let user = await User.findOne({ username: email });
-  if (!user || (md5(password) != user.passwordHash && !bcrypt.compareSync(password, user.hashedPassword))) {
+  if (!user || (md5(password) != user.hashedPassword && !bcrypt.compareSync(password, user.hashedPassword))) {
     return done(null, false, { error: 'Your login details could not be verified. Please try again.' });
   }
 
