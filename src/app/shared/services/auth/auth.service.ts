@@ -21,7 +21,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<User> {
     return this.http
-      .post<AuthResponse>('/api/auth/login', { email, password })
+      .post<AuthResponse>('api/auth/login', { email, password })
       .pipe(
         tap(({ token, user }) => {
           this.setUser(user);
@@ -38,7 +38,7 @@ export class AuthService {
     repeatPassword: string
   ): Observable<User> {
     return this.http
-      .post<AuthResponse>('/api/auth/register', {
+      .post<AuthResponse>('api/auth/register', {
         fullname,
         email,
         password,
@@ -73,7 +73,7 @@ export class AuthService {
       return EMPTY;
     }
 
-    return this.http.get<AuthResponse>('/api/auth/me').pipe(
+    return this.http.get<AuthResponse>('api/auth/me').pipe(
       tap(({ user }) => this.setUser(user)),
       pluck('user')
     );
