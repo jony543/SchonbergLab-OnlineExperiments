@@ -2,7 +2,7 @@
   <mat-toolbar color="primary">
     <a routerLink="/" class="logo"></a>
     <span class="example-spacer"></span>
-    <a href="/study_assets" style="flex: 10 1 auto;">Assets Management</a>
+    <a href="study_assets" style="flex: 10 1 auto;">Assets Management</a>
     <a class="links side" routerLink="/auth/login" *ngIf="!user">Login</a>
     <div>
       <a class="links side" *ngIf="user" [matMenuTriggerFor]="menu">

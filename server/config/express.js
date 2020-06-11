@@ -16,6 +16,7 @@ const passport = require('./passport');
 const cloudcmd = require('./cloudcmd');
 
 const app = express();
+const APP_PREFIX = "/app/";
 
 if (config.env === 'development') {
   app.use(logger('dev'));
@@ -30,7 +31,7 @@ if (config.frontend == 'react'){
  }
 
 // 
-app.use(express.static(path.join(__dirname, distDir)))
+app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
 app.use(/^((?!(api|study_assets)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
@@ -53,12 +54,12 @@ app.use(cors());
 app.use(passport.initialize());
 
 // Files browser
-const server = cloudcmd('/study_assets', app)
+const server = cloudcmd(APP_PREFIX + 'study_assets', app)
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(APP_PREFIX + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // API router
-app.use('/api/', routes);
+app.use(APP_PREFIX + 'api/', routes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

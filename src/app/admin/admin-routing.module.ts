@@ -5,7 +5,7 @@ import { AdminComponent } from './admin.component';
 import { OnlyAdminUsersGuard } from './admin-user-guard';
 
 const routes: Routes = [{
-  path: 'admin',
+  path: '',
   canActivate: [OnlyAdminUsersGuard],
   children: [{
     path: '',
@@ -13,9 +13,11 @@ const routes: Routes = [{
   }]
 }];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
+// @NgModule({
+//   imports: [RouterModule.forChild(routes)],
+//   exports: [RouterModule]
+// })
+// export class AdminRoutingModule {
+// }
 
-export class AdminRoutingModule {}
+export const AdminRoutingModule = RouterModule.forChild(routes);
