@@ -7,7 +7,6 @@ import { SharedModule } from './shared/shared.module';
 import { AppComponent } from './app.component';
 import { AuthHeaderInterceptor } from './interceptors/header.interceptor';
 import { CatchErrorInterceptor } from './interceptors/http-error.interceptor';
-import { APIInterceptor } from './interceptors/app-path.interceptor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './header/header.component';
@@ -30,11 +29,6 @@ export function appInitializerFactory(authService: AuthService) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CatchErrorInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: APIInterceptor,
       multi: true,
     },
     {
