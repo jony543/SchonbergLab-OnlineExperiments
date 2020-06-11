@@ -16,7 +16,7 @@ const passport = require('./passport');
 const cloudcmd = require('./cloudcmd');
 
 const app = express();
-const APP_PREFIX = "/app/";
+const APP_PREFIX = config.appPrefix + "/";
 
 if (config.env === 'development') {
   app.use(logger('dev'));

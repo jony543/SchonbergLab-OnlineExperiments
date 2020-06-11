@@ -50,7 +50,8 @@ module.exports = function (prefix, app) {
         passport.authenticate('jwt', { session: false }, function(err, user, info) {
             if (err) { return next(err); }
             if (!user) {
-                return res.redirect('/auth/login?redirect=' + req.originalUrl);
+                // TODO: change to config APP_PATH_PREFIX
+                return res.redirect(appConfig.appPrefix + '/auth/login?redirect=' + req.originalUrl);
             }
             
             // no need to log in user - we are not keeping sessions
