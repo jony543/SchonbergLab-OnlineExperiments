@@ -12,7 +12,7 @@ const config = {
     console: false,
     contact: false,
     configDialog: false,
-    editor: 'deepword',
+    editor: "deepword",
 };
 
 const filePicker = {
