@@ -14,16 +14,25 @@ export class LoginComponent {
   email: string | null = null;
   password: string | null = null;
 
-  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute) {}
+  constructor(private router: Router, private authService: AuthService, private route: ActivatedRoute) {
+    this.authService.getUser().subscribe((user) => {
+      if (user)
+        this.redirectAfterLogin();     
+    }) 
+  }
 
   login(): void {
     this.authService.login(this.email!, this.password!).subscribe(() => {
-      let redirect = this.route?.snapshot?.queryParams?.redirect;
+      this.redirectAfterLogin();
+    });
+  }
+
+  redirectAfterLogin() {
+    let redirect = this.route?.snapshot?.queryParams?.redirect;
       if (redirect) {
         window.location.href = redirect;        
       } else {
         this.router.navigateByUrl('/');
       }
-    });
   }
 }
