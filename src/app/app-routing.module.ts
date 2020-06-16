@@ -3,11 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from './shared/guards';
 import { HomeComponent } from './home/home.component';
+import { AssetsManagementComponent } from './assets_management/assets_management.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'assets_management',
+    component: AssetsManagementComponent,
     canActivate: [AuthGuard],
   },
   {
