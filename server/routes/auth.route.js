@@ -36,7 +36,8 @@ function login(req, res) {
             httpOnly: false,
             sameSite: true,
             signed: true,
-            secure: false
+            secure: false,
+            maxAge: 12 * 30 * 24 * 60 * 60 * 1000,
         });
 
   res.json({ user, token });
