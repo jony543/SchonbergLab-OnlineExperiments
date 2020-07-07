@@ -9,9 +9,7 @@ const pool = mysql.createPool({
 		password: config.mysql.password, 
 		database: config.mysql.database, 
 		port: 3306, 
-		// ssl:{
-		// 		ca:fs.readFileSync({ ca-cert filename }) 
-		// 	}
+		ssl: true,
 	});
 
 pool.getConnection(function(err, connection) {
