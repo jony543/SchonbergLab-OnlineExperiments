@@ -38,7 +38,8 @@ async function findOne(query) {
 		mysql.query(getQuery(whereClause), function (error, results) {
 		  if (error) reject(error);
 
-		  results = editResults(results);
+		  if (results)
+		  	results = editResults(results);
 
 		  resolve(results && results[0]);
 		});
