@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Web Socket</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+</body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const subId = urlParams.get('subId');
+    var interval;
+    var sessionId = 0; 
+
+    var exampleSocket = new WebSocket("ws://localhost:4040?subId=" + subId, "protocolOne");
+    exampleSocket.onopen = function (event) {
+        console.log(event);
+    //     exampleSocket.send("Subject " + subId + " started experiment"); 
+        
+        interval = setInterval(function () {
+            if (sessionId) {
+                var d = new Date();
+                var sec = d.getSeconds();
+
+                var data = {
+                    _id: sessionId
+                };
+                data['x' + sec] = sec;
+
+                exampleSocket.send(JSON.stringify(data));
+            }
+        }, 3000);
+    };
+    exampleSocket.onmessage = function (event) {
+        console.log(event.data);
+        var data = JSON.parse(event.data);
+        if (!sessionId) {
+            sessionId = data._id;
+        }
+    }
+
+</script>
+</html>

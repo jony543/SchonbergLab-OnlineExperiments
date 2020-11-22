@@ -13,9 +13,13 @@ const pool = mysql.createPool({
 	});
 
 pool.getConnection(function(err, connection) {
-	if (err) throw err; // not connected!
-	console.log('connected to mysql as id ' + connection.threadId);
-	connection.release();
+	if (err) {
+		//throw err; 
+		console.log('not connected to mysql!');
+	} else {
+		console.log('connected to mysql as id ' + connection.threadId);
+		connection.release();
+	}
 });
 
 module.exports = pool;

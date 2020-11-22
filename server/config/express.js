@@ -14,6 +14,7 @@ const routes = require('../routes/index.route');
 const config = require('./config');
 const passport = require('./passport');
 const cloudcmd = require('./cloudcmd');
+const ws = require('./ws');
 
 const app = express();
 const APP_PREFIX = config.appPrefix + "/";
@@ -36,7 +37,7 @@ app.use(/^((?!(api|study_assets)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
 
-console.log(distDir);
+console.log('serving directory: ' + distDir);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,6 +56,9 @@ app.use(passport.initialize());
 
 // Files browser
 const server = cloudcmd(APP_PREFIX + 'study_assets', app)
+
+// configure web sockets
+ws(server);
 
 app.use(APP_PREFIX + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
