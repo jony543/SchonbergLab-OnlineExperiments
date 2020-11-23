@@ -1,4 +1,3 @@
-const http = require('http');
 const cloudcmd = require('cloudcmd');
 const io = require('socket.io');
 const express = require('express');
@@ -38,9 +37,7 @@ const configManager = createConfigManager({
 });
 
 
-module.exports = function (prefix, app) {
-    // TODO: get server as a parameter for this function
-    const server = http.createServer(app);
+module.exports = function (prefix, server) {    
     const socket1 = io.listen(server, {
         path: `${prefix}/socket.io`
     });
@@ -63,14 +60,13 @@ module.exports = function (prefix, app) {
             return next();
         })(req, res, next);
     });
+    
     router.use(cloudcmd({
         socket: socket1,  // used by Config, Edit (optional) and Console (required)
         config,  // config data (optional)
         modules, // optional
         configManager, // optional
-    }));
+    }));    
 
-    app.use(prefix, router);
-
-    return server;
+    return router;
 };

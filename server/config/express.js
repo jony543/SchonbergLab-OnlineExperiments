@@ -1,4 +1,5 @@
 const path = require('path');
+const http = require('http');
 const express = require('express');
 const httpError = require('http-errors');
 const logger = require('morgan');
@@ -14,9 +15,10 @@ const routes = require('../routes/index.route');
 const config = require('./config');
 const passport = require('./passport');
 const cloudcmd = require('./cloudcmd');
-const ws = require('./ws');
+const session = require('./session');
 
 const app = express();
+const server = http.createServer(app);
 const APP_PREFIX = config.appPrefix + "/";
 
 if (config.env === 'development') {
@@ -55,10 +57,11 @@ app.use(cors());
 app.use(passport.initialize());
 
 // Files browser
-const server = cloudcmd(APP_PREFIX + 'study_assets', app)
+const filesBrowserRoute = APP_PREFIX + 'study_assets';
+app.use(filesBrowserRoute, cloudcmd(filesBrowserRoute, server));
 
 // configure web sockets
-ws(server);
+session('session', server);
 
 app.use(APP_PREFIX + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

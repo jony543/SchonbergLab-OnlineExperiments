@@ -13,8 +13,11 @@ async function intervalFunc() {
 }
 setInterval(intervalFunc, 10 * 1000); // write to db every 10 seconds
 
-function configureWebSockets (server) {
-	const wss = new WebSocket.Server({ server });
+function configureWebSockets (prefix, server) {
+	const wss = new WebSocket.Server({ 
+		server,
+		path: prefix
+	 });
 	 
 	wss.on('connection', async function connection(ws, req) {
 		console.log('new ws connection: '  + req.url);
@@ -29,7 +32,7 @@ function configureWebSockets (server) {
 		});
 
 		ws.on('message', function incoming(message) {
-			console.log('subId ' + subId ' message: ' + message);
+			console.log('subId ' + subId + ' message: ' + message);
 			const data = JSON.parse(message);
 
 			if ('_id' in data) {
