@@ -20,9 +20,9 @@ mongoose.connection.on('connected', () => {
 });
 
 // print mongoose logs in dev env
-if (config.MONGOOSE_DEBUG) {
-  mongoose.set('debug', (collectionName, method, query, doc) => {
-    debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
-  });
-}
+if (config.mongooseDebug) {
+	mongoose.set('debug', (collectionName, method, query, doc) => {
+		debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
+	});
+} 
 

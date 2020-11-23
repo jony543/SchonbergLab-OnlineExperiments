@@ -4,7 +4,7 @@ const url = require('url');
 
 var subjectsData = {};
 async function intervalFunc() {
-	Object.keys(subjectsData).forEach(async function(id) {
+	Object.keys(subjectsData).forEach(async function(id) {		
 		var session = await Session.findByIdAndUpdate(id, subjectsData[id], { useFindAndModify: false });	
 		if(session) {
 			delete subjectsData[id];						
@@ -15,8 +15,8 @@ setInterval(intervalFunc, 10 * 1000); // write to db every 10 seconds
 
 function configureWebSockets (prefix, server) {
 	const wss = new WebSocket.Server({ 
-		server,
-		path: prefix
+		server: server,
+		path: "/" + prefix
 	 });
 	 
 	wss.on('connection', async function connection(ws, req) {
@@ -44,7 +44,7 @@ function configureWebSockets (prefix, server) {
 					subjectsData[data._id] = data;
 				}
 			} else {
-				ws.send('session _id not found');
+				ws.send(JSON.stringify({ error: 'session _id not found' }));
 			}
 		});		
 
@@ -54,7 +54,7 @@ function configureWebSockets (prefix, server) {
 
 		subjectsData[session._id] = session._doc;
 
-		ws.send(JSON.stringify(session));
+		ws.send(JSON.stringify(session._doc));
 	});
 }
  
