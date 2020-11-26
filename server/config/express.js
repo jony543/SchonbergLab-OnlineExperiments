@@ -61,7 +61,7 @@ const filesBrowserRoute = APP_PREFIX + 'study_assets';
 app.use(filesBrowserRoute, cloudcmd(filesBrowserRoute, server));
 
 // configure web sockets
-session('session', server);
+session(APP_PREFIX + 'session', server);
 
 app.use(APP_PREFIX + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

@@ -13,7 +13,7 @@
     var interval;
     var sessionId = 0; 
 
-    var exampleSocket = new WebSocket("ws://localhost:4040/session?subId=" + subId, "protocolOne");
+    var exampleSocket = new WebSocket("ws://localhost:4040/app/session/list?subId=" + subId, "protocolOne");
     exampleSocket.onopen = function (event) {
         console.log(event);
     //     exampleSocket.send("Subject " + subId + " started experiment"); 

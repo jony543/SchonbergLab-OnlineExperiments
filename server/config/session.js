@@ -16,7 +16,7 @@ setInterval(intervalFunc, 10 * 1000); // write to db every 10 seconds
 function configureWebSockets (prefix, server) {
 	const wss = new WebSocket.Server({ 
 		server: server,
-		path: "/" + prefix
+		path: prefix
 	 });
 	 
 	wss.on('connection', async function connection(ws, req) {
@@ -42,6 +42,10 @@ function configureWebSockets (prefix, server) {
 					});
 				} else {  
 					subjectsData[data._id] = data;
+				}
+
+				if ('messageId' in data) {
+					ws.send(JSON.stringify({ messageId: messageId }));
 				}
 			} else {
 				ws.send(JSON.stringify({ error: 'session _id not found' }));
