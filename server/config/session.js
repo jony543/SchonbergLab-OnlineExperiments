@@ -32,10 +32,8 @@ function configureWebSockets (prefix, server) {
 	 });
 
 	server.on('upgrade', function upgrade(request, socket, head) {
-		console.log('server upgrade start');
 		wss.handleUpgrade(request, socket, head, function done(ws) {
-			console.log('server upgrade handled');
-			wss.emit('connection', ws, request, client);
+		  wss.emit('connection', ws, request, client);
 		});
 	});
 	 
