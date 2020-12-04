@@ -23,12 +23,11 @@ async function intervalFunc() {
 	});
 }
 
-function configureWebSockets (prefix, server) {
+function configureWebSockets (server) {
 	setInterval(intervalFunc, 10 * 1000); // write to db every 10 seconds
 
 	const wss = new WebSocket.Server({ 
-		server: server,
-		path: prefix
+		server: server
 	 });
 	 
 	wss.on('connection', async function connection(ws, req) {

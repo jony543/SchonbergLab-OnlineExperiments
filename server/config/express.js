@@ -33,14 +33,11 @@ if (config.frontend == 'react'){
   distDir ='../../dist/' ;
  }
 
-// 
 app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
 app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
 app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
-
-
 
 console.log('serving directory: ' + distDir);
 
@@ -64,7 +61,7 @@ const filesBrowserRoute = APP_PREFIX + 'study_assets';
 app.use(filesBrowserRoute, cloudcmd(filesBrowserRoute, server));
 
 // configure web sockets
-session(APP_PREFIX + 'session', server);
+session(server);
 
 app.use(APP_PREFIX + 'api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
