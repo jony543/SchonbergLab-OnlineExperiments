@@ -28,13 +28,21 @@ function configureWebSockets (prefix, server) {
 
 	const wss = new WebSocket.Server({ 
 		server: server,
-		path: prefix
 	 });
 
 	server.on('upgrade', function upgrade(request, socket, head) {
-		console.log('server upgrade start');
+		const queryStringIndex = req.url.indexOf('?');
+      	var urlNoQuery = queryStringIndex !== -1 ? request.url.slice(0, request) : req.url;
+      	urlNoQuery = urlNoQuery.replace("//", '');
+      	const pathStartIndex = urlNoQuery.indexOf('/');
+      	const path = urlNoQuery.slice(pathStartIndex + 1);
+
+      	console.log('upgrade request with path: ' + path);
+
+		if (path != prefix)
+			return;
+		
 		wss.handleUpgrade(request, socket, head, function done(ws) {
-			console.log('server upgrade handled');
 			wss.emit('connection', ws, request, client);
 		});
 	});
