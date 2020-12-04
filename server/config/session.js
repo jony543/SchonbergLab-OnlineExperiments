@@ -31,17 +31,17 @@ function configureWebSockets (prefix, server) {
 	 });
 
 	server.on('upgrade', function upgrade(request, socket, head) {
-		const queryStringIndex = req.url.indexOf('?');
+		const queryStringIndex = request.url.indexOf('?');
       	var urlNoQuery = queryStringIndex !== -1 ? request.url.slice(0, request) : req.url;
       	urlNoQuery = urlNoQuery.replace("//", '');
       	const pathStartIndex = urlNoQuery.indexOf('/');
-      	const path = urlNoQuery.slice(pathStartIndex + 1);
+      	const path = pathStartIndex !== -1 ? urlNoQuery.slice(pathStartIndex) : urlNoQuery;
 
-      	console.log('upgrade request with path: ' + path);
-
-		if (path != prefix)
+		if (path != prefix) {
+			console.log('upgrade request rejected over wrong path: ' + request.url);
 			return;
-		
+		}
+
 		wss.handleUpgrade(request, socket, head, function done(ws) {
 			wss.emit('connection', ws, request, client);
 		});
