@@ -13,12 +13,12 @@
     var interval;
     var sessionId = 0; 
 
-    var exampleSocket = new WebSocket("ws://localhost:4040/app/session/list?subId=" + subId, "protocolOne");
+    var exampleSocket = new WebSocket("ws://localhost:4040/app/session?subId=" + subId);
     exampleSocket.onopen = function (event) {
         console.log(event);
     //     exampleSocket.send("Subject " + subId + " started experiment"); 
           
-        interval = setInterval(function () {
+        interval = setInterval(function () { 
             if (sessionId) {
                 var d = new Date();
                 var sec = d.getSeconds();
@@ -27,6 +27,7 @@
                     _id: sessionId
                 };
                 data['x' + sec] = sec;
+                data['messageId'] = 'm' + d.getTime();
 
                 exampleSocket.send(JSON.stringify(data));
             }

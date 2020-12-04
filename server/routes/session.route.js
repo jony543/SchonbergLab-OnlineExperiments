@@ -9,6 +9,6 @@ module.exports = router;
 router.route('/list').get(asyncHandler(list));
 
 async function list(req, res) {
-  let results = await sessionCtrl.get(req.query.subId);
+  let results = await sessionCtrl.getBySubdId(req.query.subId);
   res.json(results);
 }

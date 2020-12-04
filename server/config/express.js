@@ -35,9 +35,12 @@ if (config.frontend == 'react'){
 
 // 
 app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
-app.use(/^((?!(api|study_assets)).)*/, (req, res) => {
+app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
+app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
+
+
 
 console.log('serving directory: ' + distDir);
 
