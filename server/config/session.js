@@ -30,12 +30,6 @@ function configureWebSockets (prefix, server) {
 		server: server,
 		path: prefix
 	 });
-
-	server.on('upgrade', function upgrade(request, socket, head) {
-		wss.handleUpgrade(request, socket, head, function done(ws) {
-		  wss.emit('connection', ws, request, client);
-		});
-	});
 	 
 	wss.on('connection', async function connection(ws, req) {
 		console.log('new ws connection: '  + req.url);
