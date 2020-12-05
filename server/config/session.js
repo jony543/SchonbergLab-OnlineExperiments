@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const Session = require('../models/session.model');
 const url = require('url');
 
+const apiProperties = ['_id', 'messageId', 'commitSession', 'broadcast'];
+
 var subjectsData = {};
 async function commitSession(sessionId) {
 	if (!mongoose.Types.ObjectId.isValid(sessionId))
@@ -28,7 +30,7 @@ function configureWebSockets (server) {
 
 	const wss = new WebSocket.Server({ 
 		server: server
-	 });
+	});
 	 
 	wss.on('connection', async function connection(ws, req) {
 		console.log('new ws connection: '  + req.url);
@@ -36,7 +38,10 @@ function configureWebSockets (server) {
 		var protocol = 'http';
 		if (!!req.socket.encrypted)
 			protocol += 's';
-		const subId = (new URL(req.url, `${protocol}://${req.headers.host}`)).searchParams.get('subId');
+		const socketUrl = (new URL(req.url, `${protocol}://${req.headers.host}`));
+
+		const subId = socketUrl.searchParams.get('subId');
+		const sessionId = socketUrl.searchParams.get('sessionId');
 
 		ws.subId = subId;
 
@@ -51,7 +56,7 @@ function configureWebSockets (server) {
 
 				if ('_id' in data) {
 					if (data._id in subjectsData) {
-						Object.keys(data).filter(k => k != '_id' && k != 'messageId').forEach(k => {
+						Object.keys(data).filter(k => !apiProperties.includes(k)).forEach(k => {
 							subjectsData[data._id][k] = data[k];
 						});
 					} else {  
@@ -83,9 +88,14 @@ function configureWebSockets (server) {
 			}
 		});	
 
-		var session = await new Session({
-			subId: subId
-		}).save();  
+		var session;
+		if (!!sessionId) {
+			session = await Session.findById(sessionId);
+		} else {
+			session = await new Session({
+				subId: subId
+			}).save();  
+		}
 
 		subjectsData[session._doc._id] = session._doc;
 		ws.send(JSON.stringify(session._doc));
