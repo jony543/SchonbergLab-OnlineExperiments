@@ -22,7 +22,10 @@ const server = http.createServer(app);
 const APP_PREFIX = config.appPrefix + "/";
 
 if (config.env === 'development') {
+  console.log('running in dev mode');
   app.use(logger('dev'));
+  app.use(cors())
+  app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
 }
 
 // Choose what fronten framework to serve the dist from
@@ -34,7 +37,6 @@ if (config.frontend == 'react'){
  }
 
 app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
-app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
 app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });

@@ -55,13 +55,13 @@ function configureWebSockets (server) {
 				const data = JSON.parse(message);
 
 				if ('_id' in data) {
-					if (data._id in subjectsData) {
-						Object.keys(data).filter(k => !apiProperties.includes(k)).forEach(k => {
-							subjectsData[data._id][k] = data[k];
-						});
-					} else {  
-						subjectsData[data._id] = data;
-					}
+					// save data to subhectsData
+					if (!(data._id in subjectsData))
+						subjectsData[data._id] = {};
+
+					Object.keys(data).filter(k => !apiProperties.includes(k)).forEach(k => {
+						subjectsData[data._id][k] = data[k];
+					});
 
 					if ('commitSession' in data && !!data['commitSession']) {
 						await commitSession(data._id);
