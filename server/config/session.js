@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 const mongoose = require('mongoose');
 const Session = require('../models/session.model');
 const url = require('url');
+const logger = require('log4js').getLogger();
 
 const apiProperties = ['_id', 'messageId', 'commitSession', 'broadcast'];
 
@@ -21,7 +22,7 @@ async function intervalFunc() {
 	Object.keys(subjectsData).forEach(async function(sessionId) {		
 		var session = await commitSession(sessionId);
 		if (session)
-			console.log('session saved for subId ' + session._doc.subId);
+			logger.debug('session saved for subId ' + session._doc.subId);
 	});
 }
 
@@ -33,7 +34,7 @@ function configureWebSockets (server) {
 	});
 	 
 	wss.on('connection', async function connection(ws, req) {
-		console.log('new ws connection: '  + req.url);
+		logger.debug('new ws connection: '  + req.url);
 
 		var protocol = 'http';
 		if (!!req.socket.encrypted)
@@ -46,12 +47,13 @@ function configureWebSockets (server) {
 		ws.subId = subId;
 
 		ws.on('error', (err) => {
-			console.log('ws error for subId' + subId + ': ');
-			console.log(err);
+			logger.error('ws error for subId:', subId, err);
 		});
 
 		ws.on('message', async function incoming(message) {
 			try {
+				logger.info('Message from',subId, message);
+
 				const data = JSON.parse(message);
 
 				if ('_id' in data) {
@@ -83,18 +85,19 @@ function configureWebSockets (server) {
 					ws.send(JSON.stringify({ error: 'session _id not found' }));
 				}
 			} catch (e) {
-				console.log('error processing message from ' + subId + ': ' + message);
-				console.log(e);
+				logger.error('error processing message from:', subId, e);
 			}
 		});	
 
 		var session;
 		if (!!sessionId) {
 			session = await Session.findById(sessionId);
+			logger.debug('session', session._doc._id, 'restored for', subId);
 		} else {
 			session = await new Session({
 				subId: subId
 			}).save();  
+			logger.debug('session', session._doc._id, 'created for', subId);
 		}
 
 		subjectsData[session._doc._id] = session._doc;

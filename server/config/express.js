@@ -2,7 +2,8 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const httpError = require('http-errors');
-const logger = require('morgan');
+const morgan = require('morgan');
+const log4js = require('log4js');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const compress = require('compression');
@@ -21,9 +22,24 @@ const app = express();
 const server = http.createServer(app);
 const APP_PREFIX = config.appPrefix + "/";
 
+log4js.configure({
+  appenders: {
+    everything: { type: 'dateFile', filename: 'logs/server.log', pattern: '.yyyy-MM-dd-hh', compress: true }
+  },
+  categories: {
+    default: { appenders: [ 'everything' ], level: 'debug' }
+  }
+});
+const logger = log4js.getLogger();
+
 if (config.env === 'development') {
   console.log('running in dev mode');
-  app.use(logger('dev'));
+  app.use(morgan('[:date[clf]] :method :url :status :response-time[0] ms / :total-time[0] ms - :res[content-length]', {
+    stream: {
+      write: function (str) { logger.debug(str); },
+    },
+    //skip: function (req, res) { return !req.url.includes('api') && !req.url.includes('session')}
+  }));
   app.use(cors())
   app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
 }
@@ -78,16 +94,22 @@ app.use((req, res, next) => {
 
 // error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
-
   // customize Joi validation errors
   if (err.isJoi) {
     err.message = err.details.map(e => e.message).join("; ");
     err.status = 400;
   }
+  
+  logger.error(err);
+  
+  if (config.env === 'development') {
+    res.status(err.status || 500).json({
+      message: err.message
+    });
+  } else {
+    res.status(err.status || 500);
+  }
 
-  res.status(err.status || 500).json({
-    message: err.message
-  });
   next(err);
 });
 

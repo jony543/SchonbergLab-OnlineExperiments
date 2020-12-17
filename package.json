@@ -41,6 +41,7 @@
     "http-errors": "^1.6.3",
     "joi": "^13.3.0",
     "jsonwebtoken": "^8.2.1",
+    "log4js": "^6.3.0",
     "md5": "^2.2.1",
     "method-override": "^2.3.10",
     "mongoose": "^5.7.5",
@@ -53,6 +54,7 @@
     "rxjs": "^6.5.5",
     "socket.io": "^2.3.0",
     "swagger-ui-express": "^3.0.9",
+    "ws": "^7.4.1",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

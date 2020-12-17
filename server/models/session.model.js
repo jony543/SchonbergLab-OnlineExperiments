@@ -7,7 +7,8 @@ const SessionSchema = new mongoose.Schema({
   }, 
 }, {
   versionKey: false,
-  strict: false
+  strict: false,
+  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
 });
 
 
