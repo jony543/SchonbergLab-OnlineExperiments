@@ -24,7 +24,7 @@ const APP_PREFIX = config.appPrefix + "/";
 
 log4js.configure({
   appenders: {
-    everything: { type: 'dateFile', filename: 'logs/server.log', pattern: '.yyyy-MM-dd-hh', compress: true }
+    everything: { type: 'dateFile', filename: 'logs/server.log', pattern: '.yyyy-MM-dd-hh', compress: false }
   },
   categories: {
     default: { appenders: [ 'everything' ], level: 'debug' }
