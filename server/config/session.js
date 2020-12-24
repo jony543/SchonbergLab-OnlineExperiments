@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Session = require('../models/session.model');
 const url = require('url');
 const logger = require('log4js').getLogger();
+const dataLogger = require('log4js').getLogger('data');
 
 const apiProperties = ['_id', 'messageId', 'commitSession', 'broadcast'];
 
@@ -52,7 +53,7 @@ function configureWebSockets (server) {
 
 		ws.on('message', async function incoming(message) {
 			try {
-				logger.info('Message from',subId, message);
+				dataLogger.info('Message from',subId, message);
 
 				const data = JSON.parse(message);
 
