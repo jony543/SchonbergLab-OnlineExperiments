@@ -9,6 +9,9 @@ module.exports = router;
 router.route('/list').get(asyncHandler(list));
 
 async function list(req, res) {
-  let results = await sessionCtrl.getBySubdId(req.query.subId);
-  res.json(results);
+	const fromDate = (req.query.from) ? new Date(req.query.from) : undefined;
+	const fields = (req.query.fields) ? req.query.fields.split(',') : undefined;
+
+	let results = await sessionCtrl.getBySubdId(req.query.subId, fields, fromDate);
+	res.json(results);
 }
