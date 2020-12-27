@@ -13,7 +13,7 @@ async function getBySubdId(subId, fields, fromDate) {
 
 	var query = Session.find({ subId: subId });	
 	if (fromDate) {
-		query.where('created_at').gt(fromDate);
+		query.where('updated_at').gt(fromDate);
 	}
 
 	if (fields) {
