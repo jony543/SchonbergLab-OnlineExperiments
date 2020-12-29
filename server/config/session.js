@@ -23,7 +23,7 @@ async function intervalFunc() {
 	Object.keys(subjectsData).forEach(async function(sessionId) {		
 		var session = await commitSession(sessionId);
 		if (session)
-			logger.debug('session saved for subId ' + session._doc.subId);
+			logger.debug('session', sessionId, 'saved for subId', session._doc.subId);
 	});
 }
 
@@ -99,10 +99,10 @@ function configureWebSockets (server) {
 				subId: subId
 			}).save();  
 			logger.debug('session', session._doc._id, 'created for', subId);
+			ws.send(JSON.stringify(session._doc));
 		}
 
-		subjectsData[session._doc._id] = session._doc;
-		ws.send(JSON.stringify(session._doc));
+		subjectsData[session._doc._id] = session._doc;		
 	});
 }
  
