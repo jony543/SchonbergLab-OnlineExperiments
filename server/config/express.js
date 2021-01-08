@@ -13,6 +13,7 @@ const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const routes = require('../routes/index.route');
+const customFiles = require('./custom.files');
 const config = require('./config');
 const passport = require('./passport');
 const cloudcmd = require('./cloudcmd');
@@ -43,7 +44,7 @@ if (config.env === 'development') {
     //skip: function (req, res) { return !req.url.includes('api') && !req.url.includes('session')}
   }));
   app.use(cors())
-  app.use(APP_PREFIX + "test", express.static('C:\\Development\\schonberg\\rani_app'));
+  app.use(APP_PREFIX + "test", express.static(path.resolve(__dirname, '../../..', 'piggy_app')));
 }
 
 // Choose what fronten framework to serve the dist from
@@ -55,6 +56,8 @@ if (config.frontend == 'react'){
  }
 
 app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
+app.use(APP_PREFIX + 'custom-file', customFiles);
+
 app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
 });
@@ -101,9 +104,9 @@ app.use((err, req, res, next) => {
     err.message = err.details.map(e => e.message).join("; ");
     err.status = 400;
   }
-  
+
   logger.error(err);
-  
+
   if (config.env === 'development') {
     res.status(err.status || 500).json({
       message: err.message

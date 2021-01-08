@@ -5,6 +5,9 @@
 /dist-server
 /tmp
 /out-tsc
+/logs
+
+*.lock
 
 # dependencies
 /node_modules
