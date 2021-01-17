@@ -56,7 +56,8 @@ if (config.frontend == 'react'){
  }
 
 app.use(APP_PREFIX, express.static(path.join(__dirname, distDir)))
-app.use(APP_PREFIX + 'custom-file', customFiles);
+app.use(APP_PREFIX + 'custom-file', customFiles(path.resolve(__dirname, '..', 'assets')));
+app.use(APP_PREFIX + 'manifests', customFiles(path.resolve(config.studyAssetsFolder, 'manifests')));
 
 app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
   res.sendFile(path.join(__dirname, distDir + '/index.html'));
