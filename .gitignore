@@ -49,3 +49,7 @@ Thumbs.db
 # Env file
 *.env
 *.log
+
+# npm lock files
+yarn.lock
+package-lock.json
