@@ -11,16 +11,16 @@ var subjectsData = {};
 async function commitSession(sessionId) {
 	if (!mongoose.Types.ObjectId.isValid(sessionId))
 		return;
-	
-	var session = await Session.findByIdAndUpdate(sessionId, subjectsData[sessionId], { useFindAndModify: false });	
+
+	var session = await Session.findByIdAndUpdate(sessionId, subjectsData[sessionId], { useFindAndModify: false });
 	if(session) {
-		delete subjectsData[sessionId];						
+		delete subjectsData[sessionId];
 	}
 	return session;
 }
 
 async function intervalFunc() {
-	Object.keys(subjectsData).forEach(async function(sessionId) {		
+	Object.keys(subjectsData).forEach(async function(sessionId) {
 		var session = await commitSession(sessionId);
 		if (session)
 			logger.debug('session', sessionId, 'saved for subId', session._doc.subId);
@@ -30,10 +30,10 @@ async function intervalFunc() {
 function configureWebSockets (server) {
 	setInterval(intervalFunc, 10 * 1000); // write to db every 10 seconds
 
-	const wss = new WebSocket.Server({ 
+	const wss = new WebSocket.Server({
 		server: server
 	});
-	 
+
 	wss.on('connection', async function connection(ws, req) {
 		logger.debug('new ws connection: '  + req.url);
 
@@ -43,6 +43,10 @@ function configureWebSockets (server) {
 		const socketUrl = (new URL(req.url, `${protocol}://${req.headers.host}`));
 
 		const subId = socketUrl.searchParams.get('subId');
+		if (isNaN(subId)) {
+			logger.error('Error: illegal subId for websocket', subId, req.url);
+		}
+
 		const sessionId = socketUrl.searchParams.get('sessionId');
 
 		ws.subId = subId;
@@ -72,7 +76,7 @@ function configureWebSockets (server) {
 
 					if ('broadcast' in data) {
 						wss.clients.forEach(function each(client) {
-							if (client.subId == subId && 
+							if (client.subId == subId &&
 								client.readyState === WebSocket.OPEN) {
 								client.send(JSON.stringify({ 'broadcast': data['broadcast'] }));
 							}
@@ -88,22 +92,29 @@ function configureWebSockets (server) {
 			} catch (e) {
 				logger.error('error processing message from:', subId, e);
 			}
-		});	
+		});
 
 		var session;
 		if (!!sessionId) {
 			session = await Session.findById(sessionId);
-			logger.debug('session', session._doc._id, 'restored for', subId);
-		} else {
+
+			if (!session) {
+				logger.warn('Failed to find session for websocker request with sessionId', sessionId);
+			} else {
+				logger.debug('session', session._doc._id, 'restored for', subId);
+			}
+		}
+
+		if (!session) {
 			session = await new Session({
 				subId: subId
-			}).save();  
+			}).save();
 			logger.debug('session', session._doc._id, 'created for', subId);
 			ws.send(JSON.stringify(session._doc));
 		}
 
-		subjectsData[session._doc._id] = session._doc;		
+		subjectsData[session._doc._id] = session._doc;
 	});
 }
- 
-module.exports = configureWebSockets; 
+
+module.exports = configureWebSockets;

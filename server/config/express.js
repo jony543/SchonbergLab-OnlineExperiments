@@ -94,6 +94,7 @@ app.use(APP_PREFIX + 'api/', routes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
+  logger.error('404 error', req.url);
   const err = new httpError(404)
   return next(err);
 });
@@ -106,7 +107,7 @@ app.use((err, req, res, next) => {
     err.status = 400;
   }
 
-  logger.error(err);
+  logger.error('ERROR in express', err);
 
   if (config.env === 'development') {
     res.status(err.status || 500).json({

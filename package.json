@@ -41,6 +41,7 @@
     "http-errors": "^1.6.3",
     "joi": "^13.3.0",
     "jsonwebtoken": "^8.2.1",
+    "log-timestamp": "^0.3.0",
     "log4js": "^6.3.0",
     "md5": "^2.2.1",
     "method-override": "^2.3.10",

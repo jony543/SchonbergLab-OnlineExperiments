@@ -37,7 +37,7 @@ const configManager = createConfigManager({
 });
 
 
-module.exports = function (prefix, server) {    
+module.exports = function (prefix, server) {
     const socket1 = io.listen(server, {
         path: `${prefix}/socket.io`
     });
@@ -47,10 +47,9 @@ module.exports = function (prefix, server) {
         passport.authenticate('jwt', { session: false }, function(err, user, info) {
             if (err) { return next(err); }
             if (!user) {
-                // TODO: change to config APP_PATH_PREFIX
                 return res.redirect(appConfig.appPrefix + '/auth/login?redirect=' + req.originalUrl);
             }
-            
+
             // no need to log in user - we are not keeping sessions
             // req.logIn(user, function(err) {
             //   if (err) { return next(err); }
@@ -60,13 +59,13 @@ module.exports = function (prefix, server) {
             return next();
         })(req, res, next);
     });
-    
+
     router.use(cloudcmd({
         socket: socket1,  // used by Config, Edit (optional) and Console (required)
         config,  // config data (optional)
         modules, // optional
         configManager, // optional
-    }));    
+    }));
 
     return router;
 };
