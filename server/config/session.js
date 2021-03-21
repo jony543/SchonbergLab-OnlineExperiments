@@ -8,7 +8,7 @@ const dataLogger = require('log4js').getLogger('data');
 const apiProperties = ['_id', 'messageId', 'commitSession', 'broadcast'];
 
 var subjectsData = {};
-async function commitSession(sessionId, subId) {
+async function commitSession(sessionId) {
 	if (!mongoose.Types.ObjectId.isValid(sessionId))
 		return;
 
@@ -16,14 +16,14 @@ async function commitSession(sessionId, subId) {
 	if(session) {
 		delete subjectsData[sessionId];
 	} else {
-		logger.error('Failed to commit session', sessionId, 'for subId', subId)
+		logger.error('Failed to commit session', sessionId)
 	}
 	return session;
 }
 
 async function intervalFunc() {
 	Object.keys(subjectsData).forEach(async function(sessionId) {
-		var session = await commitSession(sessionId, subId);
+		var session = await commitSession(sessionId);
 		if (session)
 			logger.debug('session', sessionId, 'saved for subId', session._doc.subId);
 	});
@@ -78,7 +78,7 @@ function configureWebSockets (server) {
 
 					if ('commitSession' in data && !!data['commitSession']) {
 						logger.info('Message from', subId, 'contains commitSession command');
-						await commitSession(data._id, subId);
+						await commitSession(data._id);
 					}
 
 					if ('broadcast' in data) {
