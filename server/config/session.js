@@ -95,14 +95,14 @@ function configureWebSockets (server) {
 					if ('messageId' in data) {
 						ws.send(JSON.stringify({ messageId: data['messageId'], status: 'received' }));
 					}
+					const messageProcessingTotal = new Date() - messageProcessingStart;
+					logger.info('Processsed message from', subId, 'in', messageProcessingTotal, 'ms', 'sessionId:', data._id);
 				} else {
+					logger.warn('message does not contain session _id for subId:', subId);
 					ws.send(JSON.stringify({ error: 'session _id not found' }));
 				}
 			} catch (e) {
 				logger.error('error processing message from:', subId, e);
-			} finally {
-				const messageProcessingTotal = new Date() - messageProcessingStart;
-				logger.info('Processsed message from', subId, 'in', messageProcessingTotal, 'ms');
 			}
 		});
 
