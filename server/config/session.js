@@ -59,11 +59,11 @@ function configureWebSockets (server) {
 		});
 
 		ws.on('message', async function incoming(message) {
+			const messageProcessingStart = new Date()
+
 			try {
 				dataLogger.info('Message from',subId, message);
 				logger.info('Messsage from', subId);
-
-				const messageProcessingStart = new Date()
 
 				const data = JSON.parse(message);
 
@@ -100,7 +100,7 @@ function configureWebSockets (server) {
 			} catch (e) {
 				logger.error('error processing message from:', subId, e);
 			} finally {
-				var messageProcessingTotal = new Date() - messageProcessingStart;
+				const messageProcessingTotal = new Date() - messageProcessingStart;
 				logger.info('Processsed message from', subId, 'in', messageProcessingTotal, 'ms');
 			}
 		});
