@@ -63,11 +63,12 @@ function configureWebSockets (server) {
 
 			try {
 				dataLogger.info('Message from',subId, message);
-				logger.info('Messsage from', subId);
 
 				const data = JSON.parse(message);
 
 				if ('_id' in data) {
+					logger.info('Messsage from', subId, 'sessionId:', data._id);
+
 					// save data to subhectsData
 					if (!(data._id in subjectsData))
 						subjectsData[data._id] = {};
@@ -77,12 +78,12 @@ function configureWebSockets (server) {
 					});
 
 					if ('commitSession' in data && !!data['commitSession']) {
-						logger.info('Message from', subId, 'contains commitSession command');
+						logger.info('Message from', subId, 'contains commitSession command', 'sessionId:', data._id);
 						await commitSession(data._id);
 					}
 
 					if ('broadcast' in data) {
-						logger.info('Message from', subId, 'contains broadcast command');
+						logger.info('Message from', subId, 'contains broadcast command', 'sessionId:', data._id);
 						wss.clients.forEach(function each(client) {
 							if (client.subId == subId &&
 								client.readyState === WebSocket.OPEN) {
