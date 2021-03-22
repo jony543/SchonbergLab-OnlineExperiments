@@ -62,7 +62,7 @@ function configureWebSockets (server) {
 		});
 
 		ws.on('close', (code, reason) => {
-			logger.error('ws closed for subId:', subId, 'code:', code, reason, 'sessionId', ws.sessionId, 'sessionName', ws.sessionName);
+			logger.info('ws closed for subId:', subId, 'code:', code, reason, 'sessionId', ws.sessionId, 'sessionName', ws.sessionName);
 		});
 
 		ws.on('message', async function incoming(message) {
