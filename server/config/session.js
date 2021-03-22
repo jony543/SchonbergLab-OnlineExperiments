@@ -53,9 +53,14 @@ function configureWebSockets (server) {
 		const sessionId = socketUrl.searchParams.get('sessionId');
 
 		ws.subId = subId;
+		ws.sessionId = sessionId;
 
 		ws.on('error', (err) => {
-			logger.error('ws error for subId:', subId, err);
+			logger.error('ws error', err, 'for subId:', subId, 'sessionId', ws.sessionId);
+		});
+
+		ws.on('close', (code, reason) => {
+			logger.error('ws closed for subId:', subId, 'code:' code, reason, 'sessionId', ws.sessionId);
 		});
 
 		ws.on('message', async function incoming(message) {
@@ -67,6 +72,7 @@ function configureWebSockets (server) {
 				const data = JSON.parse(message);
 
 				if ('_id' in data) {
+					ws.sessionId = data._id;
 					logger.info('Messsage from', subId, 'sessionId:', data._id);
 
 					// save data to subhectsData
