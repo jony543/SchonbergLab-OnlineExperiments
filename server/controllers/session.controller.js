@@ -28,6 +28,8 @@ async function getBySubdId(subId, fields, fromDate) {
 }
 
 async function upsertMany(subId, docs) {
+  logger.info('upsertMany was called', subId, docs);
+  
   if (isNaN(subId)) {
 		logger.warn('upsertMany called with illegal value: ' + subId);
     return { 'error': 'illegal subId' };
