@@ -2,7 +2,8 @@ const Session = require('../models/session.model');
 const logger = require('log4js').getLogger();
 
 module.exports = {
-  getBySubdId
+  getBySubdId,
+  upsertMany
 }
 
 async function getBySubdId(subId, fields, fromDate) {
