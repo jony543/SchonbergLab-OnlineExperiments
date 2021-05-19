@@ -24,12 +24,13 @@ async function getBySubdId(subId, fields, fromDate) {
 	return await query.exec()
 		.catch(function (e) {
 			logger.error('error in getBySubId. subId=' + subId, e);
+      throw e;
 	});
 }
 
 async function upsertMany(subId, docs) {
-  logger.info('upsertMany was called', subId, docs);
-  
+  logger.info('upsertMany was called', subId);
+
   if (isNaN(subId)) {
 		logger.warn('upsertMany called with illegal value: ' + subId);
     return { 'error': 'illegal subId' };
@@ -59,5 +60,6 @@ async function upsertMany(subId, docs) {
   return await Session.bulkWrite(bulkOps)
 		.catch(function (e) {
       logger.error('error in upsertMany. subId=' + subId, e);
+      throw e;
 	});
 }
