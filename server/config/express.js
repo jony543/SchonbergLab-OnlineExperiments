@@ -65,8 +65,8 @@ app.use(/^((?!(api|study_assets|test)).)*/, (req, res) => {
 
 console.log('serving directory: ' + distDir);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '10mb', extended: true}));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}));
 
 app.use(cookieParser(config.jwtSecret));
 app.use(compress());
