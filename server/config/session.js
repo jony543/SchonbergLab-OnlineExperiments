@@ -52,6 +52,7 @@ function configureWebSockets (server) {
 
 		const sessionId = socketUrl.searchParams.get('sessionId');
 		const sessionName = socketUrl.searchParams.get('sName');
+		const localSessionId = socketUrl.searchParams.get('localSessionId');
 
 		ws.subId = subId;
 		ws.sessionId = sessionId;
@@ -127,7 +128,8 @@ function configureWebSockets (server) {
 
 		if (!session) {
 			session = await new Session({
-				subId: subId
+				subId: subId,
+				localSessionId: localSessionId
 			}).save();
 			logger.debug('session', session._doc._id, 'created for', subId, 'sessionName', ws.sessionName);
 			ws.send(JSON.stringify(session._doc));
