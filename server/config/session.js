@@ -12,11 +12,13 @@ async function commitSession(sessionId) {
 	if (!mongoose.Types.ObjectId.isValid(sessionId))
 		return;
 
-	var session = await Session.findByIdAndUpdate(sessionId, subjectsData[sessionId], { useFindAndModify: false });
-	if(session) {
-		delete subjectsData[sessionId];
-	} else {
-		logger.error('Failed to commit session', sessionId)
+	const dataToCommit = subjectsData[sessionId];
+	delete subjectsData[sessionId];
+	var session = await Session.findByIdAndUpdate(sessionId, dataToCommit, { useFindAndModify: false });
+	if(!session) {
+		logger.error('Failed to commit session', sessionId);
+		const newData = subjectsData[sessionId] || {};
+		subjectsData[sessionId] = Object.assign(dataToCommit, newData);
 	}
 	return session;
 }
